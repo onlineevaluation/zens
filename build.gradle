@@ -24,6 +24,10 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     runtimeOnly 'mysql:mysql-connector-java'
+    // druid
+    implementation 'com.alibaba:druid:1.1.12'
+    //jwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
