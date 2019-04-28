@@ -43,6 +43,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/druid/**").permitAll()
             .antMatchers("/user/login").permitAll()
             .antMatchers("/").permitAll()
+            .antMatchers("/file/**").permitAll()
             .anyRequest().authenticated()
 
 

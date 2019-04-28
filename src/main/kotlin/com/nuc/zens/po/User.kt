@@ -46,6 +46,14 @@ class User : UserDetails {
     private lateinit var roles: List<Role>
 
     /**
+     * 设置 username
+     * @param username String
+     */
+    fun setUsername(username: String) {
+        this.username = username
+    }
+
+    /**
      * 获取用户名
      */
     override fun getUsername(): String {
@@ -97,6 +105,12 @@ class User : UserDetails {
         return password
     }
 
+    /**
+     * 设置密码
+     */
+    fun setPassword(password: String) {
+        this.password = password
+    }
 
     override fun toString(): String {
         return "UserParam(id=$id, username='$username', password='$password', status=$status, roles=$roles)"

@@ -22,7 +22,7 @@ class Student {
     lateinit var studentNumber: String
     var proTeamId: Long? = 0
     var status: Long? = 0
-    var gender: Long? = 0
+    var gender: Int? = 0
     var nation: String? = null
     var phone: String? = null
     var qq: String? = null
