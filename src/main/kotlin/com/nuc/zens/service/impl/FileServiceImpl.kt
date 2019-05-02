@@ -36,6 +36,9 @@ class FileServiceImpl : FileService {
     @Autowired
     private lateinit var courseRepository: CourseRepository
 
+    @Autowired
+    private lateinit var chapterRepository: ChapterRepository
+
     override fun uploadExcelFile(file: MultipartFile, type: String) {
         val workbook = WorkbookFactory.create(file.inputStream)
         val sheet = workbook.getSheet("学生信息")
@@ -118,8 +121,10 @@ class FileServiceImpl : FileService {
         val workbook = XSSFWorkbook()
         val titleSheet = workbook.createSheet("试题信息")
         val knowledgeSheet = workbook.createSheet("知识点信息")
+        val chapterSheet = workbook.createSheet("章节信息")
         val titleRow = titleSheet.createRow(0)
         val knowledgeRow = knowledgeSheet.createRow(0)
+        val chapterRow = chapterSheet.createRow(0)
         val titleHeader = mutableListOf(
             "题目",
             "题型(1 选择题，2填空题，3简单题，编程题和算法题请从网页添加，暂不支持批量导入)",
@@ -133,13 +138,15 @@ class FileServiceImpl : FileService {
             "答案是否有序",
             "知识点ID"
         )
-        val knowledgeHeader = mutableListOf("知识点id", "知识点", "是否重点 (1 是/ 0 否)", "是否难点(1 是/ 0 否)")
+        val knowledgeHeader = mutableListOf("知识点id", "知识点", "是否重点 (1 是/ 0 否)", "是否难点(1 是/ 0 否)", "章节id")
+        val chapterHeader = mutableListOf("章节id", "章节名称")
         addTableHeader(titleRow, titleHeader)
         addTableHeader(knowledgeRow, knowledgeHeader)
+        addTableHeader(chapterRow, chapterHeader)
         val knowledgeList = knowledgeRepository.findByCourseId(courseId)
         for (i in 0 until knowledgeList.size) {
             val knowledgeRow = knowledgeSheet.createRow(i + 1)
-            for (j in 0 until 4) {
+            for (j in 0 until knowledgeHeader.size) {
                 val cell = knowledgeRow.createCell(j)
                 when (j) {
                     0 -> {
@@ -164,10 +171,28 @@ class FileServiceImpl : FileService {
                         }
                         cell.setCellValue(isDiff.toString())
                     }
+                    4 -> {
+                        val chapterId = knowledgeList[i].chapterId
+                        cell.setCellValue(chapterId.toString())
+                    }
                 }
             }
         }
 
+        val chapterList = chapterRepository.findAll()
+
+        for (i in 0 until chapterList.size) {
+            val chapterRow = chapterSheet.createRow(i + 1)
+            for (j in 0 until chapterHeader.size) {
+                val cell = chapterRow.createCell(j)
+                if (j == 0) {
+                    cell.setCellValue(chapterList[i].id.toString())
+                }
+                if (j == 1) {
+                    cell.setCellValue(chapterList[i].name)
+                }
+            }
+        }
         val os = FileOutputStream("d:/title.xlsx")
         workbook.write(os)
         val file = File("d:/title.xlsx")

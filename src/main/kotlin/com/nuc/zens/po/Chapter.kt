@@ -1,4 +1,4 @@
-package com.nuc.znes.po
+package com.nuc.zens.po
 
 import javax.persistence.*
 
@@ -27,7 +27,7 @@ class Chapter {
     var courseId: Long = 0L
 
     override fun toString(): String {
-        return "Chapter(id=$id, num=$num, name='$name', isDifficult=$isDifficult, isImportant=$isImportant, courseId=$courseId)"
+        return "ChapterController(id=$id, num=$num, name='$name', isDifficult=$isDifficult, isImportant=$isImportant, courseId=$courseId)"
     }
 
 

@@ -28,4 +28,11 @@ interface StudentRepository : JpaRepository<Student, Long> {
      * @return Long 班级总人数
      */
     fun countByClassId(classId: Long):Long
+
+    /**
+     * 通过 user id 查找 student
+     * @param userId Long
+     * @return Student
+     */
+    fun findByUserId(userId:Long):Student
 }

@@ -2,6 +2,8 @@ package com.nuc.zens.service.impl
 
 import com.nuc.zens.exception.ResultException
 import com.nuc.zens.po.Role
+import com.nuc.zens.po.Student
+import com.nuc.zens.po.Teacher
 import com.nuc.zens.po.User
 import com.nuc.zens.repository.*
 import com.nuc.zens.security.JwtTokenProvider
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Service
  * 用户信息中心
  */
 @Service
-class UserServiceImpl : UserService, UserDetailsService  {
+class UserServiceImpl : UserService, UserDetailsService {
 
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
@@ -52,8 +54,6 @@ class UserServiceImpl : UserService, UserDetailsService  {
 
     @Autowired
     private lateinit var classRepository: ClassRepository
-
-
 
 
     /**
@@ -146,7 +146,7 @@ class UserServiceImpl : UserService, UserDetailsService  {
     }
 
 
-    override fun studentProfile(studentId: Long):StudentInfo {
+    override fun studentProfile(studentId: Long): StudentInfo {
         val student = studentRepository.findById(studentId).get()
         val studentInfo = StudentInfo()
         BeanUtils.copyProperties(student, studentInfo)
@@ -156,6 +156,24 @@ class UserServiceImpl : UserService, UserDetailsService  {
 
     override fun teacherProfile(teacherId: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
+    /**
+     * 查找所有学生
+     * @return List<Student>
+     */
+    override fun findAllStudent(): List<Student> {
+        return studentRepository.findAll()
+    }
+
+
+    /**
+     * 获取所有教师
+     * @return List<Teacher>
+     */
+    override fun findAllTeacher(): List<Teacher> {
+        return teacherRepository.findAll()
     }
 }
 

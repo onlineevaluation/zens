@@ -1,6 +1,8 @@
 package com.nuc.zens.service
 
 import com.nuc.zens.exception.ResultException
+import com.nuc.zens.po.Student
+import com.nuc.zens.po.Teacher
 import com.nuc.zens.vo.StudentInfo
 import com.nuc.zens.vo.UserProfileInfo
 
@@ -37,4 +39,16 @@ interface UserService {
      * @param teacherId Long
      */
     fun teacherProfile(teacherId: Long)
+
+    /**
+     * 获取所有的学生
+     * @return List<Student>
+     */
+    fun findAllStudent():List<Student>
+
+    /**
+     * 获取所有的教师
+     * @return List<Teacher>
+     */
+    fun findAllTeacher():List<Teacher>
 }

@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 interface CourseRepository : JpaRepository<Course, Long> {
-
 }
