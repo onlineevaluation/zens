@@ -42,3 +42,18 @@ class StudentInfo {
     var classId: Long = 0L
 }
 
+/**
+ * 返回教师信息
+ * @property id Long
+ * @property name String
+ * @property teacherNumber String
+ * @property position String 职位
+ * @property positionId Long 职位id
+ */
+class TeacherInfo {
+    var id: Long = 0L
+    lateinit var name: String
+    lateinit var teacherNumber: String
+    lateinit var position: String
+    var positionId: Long = 0L
+}

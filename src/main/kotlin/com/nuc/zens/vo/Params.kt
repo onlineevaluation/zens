@@ -34,3 +34,12 @@ data class CourseParam(val name: String, val introduce: String)
  * @constructor
  */
 data class StudentParam(val studentName: String, val studentNum: String, val classId: Long)
+
+/**
+ * 新增教师参数
+ * @property teacherName String
+ * @property teacherNumber String
+ * @property positionId Long
+ * @constructor
+ */
+data class TeacherParam(val teacherName: String, val teacherNum: String, val positionId: Long)

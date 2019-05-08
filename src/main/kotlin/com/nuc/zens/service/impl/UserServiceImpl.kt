@@ -6,6 +6,7 @@ import com.nuc.zens.repository.*
 import com.nuc.zens.security.JwtTokenProvider
 import com.nuc.zens.service.UserService
 import com.nuc.zens.vo.StudentInfo
+import com.nuc.zens.vo.TeacherInfo
 import com.nuc.zens.vo.UserProfileInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -56,6 +57,8 @@ class UserServiceImpl : UserService, UserDetailsService {
     @Autowired
     private lateinit var classRepository: ClassRepository
 
+    @Autowired
+    private lateinit var positionRepository: PositionRepository
 
     /**
      * 通过用户名进行用户查找
@@ -183,8 +186,19 @@ class UserServiceImpl : UserService, UserDetailsService {
      * 获取所有教师
      * @return List<Teacher>
      */
-    override fun findAllTeacher(): List<Teacher> {
-        return teacherRepository.findAll()
+    override fun findAllTeacher(): List<TeacherInfo> {
+        val teacherList = teacherRepository.findAll()
+        val teacherInfoList = teacherList.map {
+            val teacherInfo = TeacherInfo()
+            teacherInfo.name = it.name
+            val position = positionRepository.getOne(it.positionId)
+            teacherInfo.position = position.name
+            teacherInfo.positionId = position.id
+            teacherInfo.teacherNumber = it.jobNumber
+            return@map teacherInfo
+        }
+
+        return teacherInfoList
     }
 
 

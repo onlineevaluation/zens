@@ -66,7 +66,7 @@ class UserController {
      * 获取所有的教师
      * @return Result
      */
-    @GetMapping("/teacher")
+    @GetMapping("/teachers")
     fun allTeacher(): Result {
         val teachers = userService.findAllTeacher()
         return ResultUtils.success(data = teachers)
