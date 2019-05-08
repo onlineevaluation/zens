@@ -39,16 +39,16 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         // 权限配置
-        http.authorizeRequests()
-            .antMatchers("/druid/**").permitAll()
-            .antMatchers("/user/login").permitAll()
-            .antMatchers("/").permitAll()
-            .antMatchers("/file/**").permitAll()
-            .anyRequest().authenticated()
+//        http.authorizeRequests()
+//            .antMatchers("/druid/**").permitAll()
+//            .antMatchers("/user/login").permitAll()
+//            .antMatchers("/").permitAll()
+//            .antMatchers("/file/**").permitAll()
+//            .anyRequest().authenticated()
 
 
         // 使用 jwt
-        http.apply(JwtTokenFilterConfigurer(jwtTokenProvider))
+//        http.apply(JwtTokenFilterConfigurer(jwtTokenProvider))
 
     }
 

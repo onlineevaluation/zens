@@ -24,4 +24,13 @@ data class UserParam(
  * @property introduce String
  * @constructor
  */
-data class CourseParam(val name:String,val introduce:String)
+data class CourseParam(val name: String, val introduce: String)
+
+/**
+ * 接收新增学生参数
+ * @property studentName String
+ * @property studentNum String
+ * @property classId Int
+ * @constructor
+ */
+data class StudentParam(val studentName: String, val studentNum: String, val classId: Long)

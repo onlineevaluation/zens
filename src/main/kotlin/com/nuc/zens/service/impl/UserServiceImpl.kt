@@ -1,10 +1,7 @@
 package com.nuc.zens.service.impl
 
 import com.nuc.zens.exception.ResultException
-import com.nuc.zens.po.Role
-import com.nuc.zens.po.Student
-import com.nuc.zens.po.Teacher
-import com.nuc.zens.po.User
+import com.nuc.zens.po.*
 import com.nuc.zens.repository.*
 import com.nuc.zens.security.JwtTokenProvider
 import com.nuc.zens.service.UserService
@@ -19,7 +16,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.Duration
+import java.time.LocalTime
+import javax.transaction.Transactional
 
 /**
  * @author 杨晓辉 2018/2/1 15:46
@@ -163,8 +164,18 @@ class UserServiceImpl : UserService, UserDetailsService {
      * 查找所有学生
      * @return List<Student>
      */
-    override fun findAllStudent(): List<Student> {
-        return studentRepository.findAll()
+    override fun findAllStudent(): List<StudentInfo> {
+        val studentList = studentRepository.findAll()
+        val studentInfoList = studentList.map {
+
+            val studentInfo = StudentInfo()
+            BeanUtils.copyProperties(it, studentInfo)
+            val `class` = classRepository.getOne(it.classId)
+            studentInfo.`class` = `class`.name
+            studentInfo
+        }
+        return studentInfoList
+
     }
 
 
@@ -175,5 +186,39 @@ class UserServiceImpl : UserService, UserDetailsService {
     override fun findAllTeacher(): List<Teacher> {
         return teacherRepository.findAll()
     }
-}
 
+
+    /**
+     * 添加用户
+     * @param studentNum String
+     * @param studentName String
+     * @param classId Long
+     */
+    @Transactional
+    override fun addStudent(studentNum: String, studentName: String, classId: Long) {
+        // 在 user 表中进行添加
+        val user = User()
+        // 用户表中的用户名为 学号
+        user.username = studentNum
+        // 密码加密 默认密码 111111
+        val encode = BCryptPasswordEncoder()
+        val password = encode.encode("111111")
+        user.password = password
+        // 保存数据
+        val userInDB = userRepository.saveAndFlush(user)
+        val student = Student()
+        student.userId = userInDB.id
+        student.name = studentName
+        student.studentNumber = studentNum
+        student.classId = classId
+        // 保存学生数据
+        studentRepository.saveAndFlush(student)
+
+        // 角色设置及保存
+        val userAndRole = UserAndRole()
+        userAndRole.userId = userInDB.id
+        // 学生默认的角色为学生 roleId = 3
+        userAndRole.roleId = 3L
+        userAndRoleRepository.saveAndFlush(userAndRole)
+    }
+}

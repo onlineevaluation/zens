@@ -35,6 +35,7 @@ class UserProfileInfo {
  * @property classId Long 班级id
  */
 class StudentInfo {
+    var id: Long = 0L
     lateinit var name: String
     lateinit var studentNumber: String
     lateinit var `class`: String

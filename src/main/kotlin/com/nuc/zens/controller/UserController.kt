@@ -3,6 +3,7 @@ package com.nuc.zens.controller
 import com.nuc.zens.result.Result
 import com.nuc.zens.service.UserService
 import com.nuc.zens.util.ResultUtils
+import com.nuc.zens.vo.StudentParam
 import com.nuc.zens.vo.UserParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -58,6 +59,7 @@ class UserController {
     fun allStudents(): Result {
         val students = userService.findAllStudent()
         return ResultUtils.success(data = students)
+
     }
 
     /**
@@ -69,5 +71,14 @@ class UserController {
         val teachers = userService.findAllTeacher()
         return ResultUtils.success(data = teachers)
     }
+
+
+    @PostMapping("/student")
+    fun addStudent(@RequestBody studentParam: StudentParam): Result {
+        println("studentParam = ${studentParam}")
+        userService.addStudent(studentParam.studentNum, studentParam.studentName, studentParam.classId)
+        return ResultUtils.success()
+    }
+
 
 }
