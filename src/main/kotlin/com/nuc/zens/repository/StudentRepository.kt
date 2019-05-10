@@ -1,6 +1,7 @@
 package com.nuc.zens.repository
 
 import com.nuc.zens.po.Student
+import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -35,4 +36,5 @@ interface StudentRepository : JpaRepository<Student, Long> {
      * @return Student
      */
     fun findByUserId(userId:Long):Student
+
 }

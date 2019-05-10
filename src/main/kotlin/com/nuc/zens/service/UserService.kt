@@ -45,13 +45,13 @@ interface UserService {
      * 获取所有的学生
      * @return List<Student>
      */
-    fun findAllStudent():List<StudentInfo>
+    fun findAllStudent(page: Int): List<StudentInfo>
 
     /**
      * 获取所有的教师
      * @return List<Teacher>
      */
-    fun findAllTeacher():List<TeacherInfo>
+    fun findAllTeacher(page:Int): List<TeacherInfo>
 
     /**
      * 添加学生用户
@@ -60,4 +60,9 @@ interface UserService {
      * @param classId Long
      */
     fun addStudent(studentNum: String, studentName: String, classId: Long)
+
+    /**
+     * 更改教师权限
+     */
+    fun updateTeacherRole()
 }

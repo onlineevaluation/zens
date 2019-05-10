@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
@@ -167,16 +168,22 @@ class UserServiceImpl : UserService, UserDetailsService {
      * 查找所有学生
      * @return List<Student>
      */
-    override fun findAllStudent(): List<StudentInfo> {
-        val studentList = studentRepository.findAll()
-        val studentInfoList = studentList.map {
+    override fun findAllStudent(page: Int): List<StudentInfo> {
+        val pageable = PageRequest.of(page, 10)
+        val studentPage = studentRepository.findAll(pageable)
+        val totalPage = studentPage.totalPages
+        val totalElement = studentPage.totalElements
+        println("执行完查询所有 ")
+        val studentInfoList = studentPage.map {
 
             val studentInfo = StudentInfo()
             BeanUtils.copyProperties(it, studentInfo)
             val `class` = classRepository.getOne(it.classId)
             studentInfo.`class` = `class`.name
-            studentInfo
-        }
+            return@map studentInfo
+        }.toList()
+        println("执行完所有的")
+
         return studentInfoList
 
     }
@@ -186,7 +193,7 @@ class UserServiceImpl : UserService, UserDetailsService {
      * 获取所有教师
      * @return List<Teacher>
      */
-    override fun findAllTeacher(): List<TeacherInfo> {
+    override fun findAllTeacher(page: Int): List<TeacherInfo> {
         val teacherList = teacherRepository.findAll()
         val teacherInfoList = teacherList.map {
             val teacherInfo = TeacherInfo()
@@ -234,5 +241,13 @@ class UserServiceImpl : UserService, UserDetailsService {
         // 学生默认的角色为学生 roleId = 3
         userAndRole.roleId = 3L
         userAndRoleRepository.saveAndFlush(userAndRole)
+    }
+
+
+    /**
+     * 更新教师权限
+     */
+    override fun updateTeacherRole() {
+
     }
 }

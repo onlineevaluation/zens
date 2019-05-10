@@ -4,6 +4,7 @@ import com.nuc.zens.result.Result
 import com.nuc.zens.service.UserService
 import com.nuc.zens.util.ResultUtils
 import com.nuc.zens.vo.StudentParam
+import com.nuc.zens.vo.TeacherRoleParam
 import com.nuc.zens.vo.UserParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -18,7 +19,6 @@ class UserController {
 
     @Autowired
     private lateinit var userService: UserService
-
 
     /**
      * 用户登录
@@ -55,9 +55,9 @@ class UserController {
      * 获取所有的学生
      * @return Result
      */
-    @GetMapping("/students")
-    fun allStudents(): Result {
-        val students = userService.findAllStudent()
+    @GetMapping("/students/{page}")
+    fun allStudents(@PathVariable("page") page: Int): Result {
+        val students = userService.findAllStudent(page)
         return ResultUtils.success(data = students)
 
     }
@@ -66,9 +66,9 @@ class UserController {
      * 获取所有的教师
      * @return Result
      */
-    @GetMapping("/teachers")
-    fun allTeacher(): Result {
-        val teachers = userService.findAllTeacher()
+    @GetMapping("/teachers/{page}")
+    fun allTeacher(@PathVariable("page") page: Int): Result {
+        val teachers = userService.findAllTeacher(page)
         return ResultUtils.success(data = teachers)
     }
 
@@ -80,5 +80,10 @@ class UserController {
         return ResultUtils.success()
     }
 
+
+    @PutMapping("/teacher/role")
+    fun updateTeacherRole(@RequestBody teacherRoleParam: TeacherRoleParam) {
+        println("teacher Id is ${teacherRoleParam.roleIds}")
+    }
 
 }

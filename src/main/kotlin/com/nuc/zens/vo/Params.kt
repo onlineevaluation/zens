@@ -43,3 +43,5 @@ data class StudentParam(val studentName: String, val studentNum: String, val cla
  * @constructor
  */
 data class TeacherParam(val teacherName: String, val teacherNum: String, val positionId: Long)
+
+data class TeacherRoleParam(val teacherId:Long,val roleIds:Array<Int>)
