@@ -3,6 +3,8 @@ package com.nuc.zens.service.impl
 import com.nuc.zens.po.Student
 import com.nuc.zens.po.User
 import com.nuc.zens.repository.*
+import com.nuc.zens.repository.point.CourseRepository
+import com.nuc.zens.repository.point.KnowledgeRepository
 import com.nuc.zens.service.FileService
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.WorkbookFactory
