@@ -1,16 +1,13 @@
-package com.nuc.tracking.teacherend.controller.admin
+package com.nuc.zens.controller.admin
 
-import com.nuc.tracking.teacherend.po.admin.College
-import com.nuc.tracking.teacherend.result.Result
-import com.nuc.tracking.teacherend.service.admin.CollegeService
-import com.nuc.tracking.teacherend.util.ResultUtils
+import com.nuc.zens.po.admin.College
+import com.nuc.zens.result.Result
+import com.nuc.zens.service.admin.CollegeService
+import com.nuc.zens.util.ResultUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * 专业管理
@@ -25,7 +22,29 @@ class CollegeController {
 
     @PostMapping("/insert")
     fun insertCollege(@RequestBody college: College): Result {
+        println("college ${college}")
         val msg = collegeService.save(college)
         return ResultUtils.success(200, "插入成功", msg)
     }
+
+    @GetMapping("/all")
+    fun getList(): Result {
+        val msg = collegeService.findAll()
+        return ResultUtils.success(200, "获取列表", msg)
+    }
+
+    @DeleteMapping("/delete/{id}")
+    fun deleteOne(@PathVariable id:Long):Result{
+        collegeService.deleteById(id)
+        val msg=collegeService.findAll()
+        return ResultUtils.success(200,"删除成功",msg)
+    }
+
+    @GetMapping("/findOne/{id}")
+    fun findOne(@PathVariable id:Long):Result{
+        val msg=collegeService.findOne(id)
+        return ResultUtils.success(200,"查找成功",msg)
+    }
+
+
 }

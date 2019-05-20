@@ -1,12 +1,9 @@
-package com.nuc.tracking.teacherend.po.admin
+package com.nuc.zens.po.admin
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import javax.persistence.*
-
 
 @Entity
 @Table(name = "nuc_admin_college")
-@JsonIgnoreProperties(value = ["id"])
 class College {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,5 +12,10 @@ class College {
     var name: String? = null
     var summary: String? = null
     var universityId: Long = 0
+
+    override fun toString(): String {
+        return "College(id=$id, major=$major, name=$name, summary=$summary, universityId=$universityId)"
+    }
+
 
 }

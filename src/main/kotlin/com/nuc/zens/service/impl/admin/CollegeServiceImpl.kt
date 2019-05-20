@@ -1,8 +1,8 @@
-package com.nuc.tracking.teacherend.service.impl.admin
+package com.nuc.zens.service.impl.admin
 
-import com.nuc.tracking.teacherend.po.admin.College
-import com.nuc.tracking.teacherend.repository.admin.CollegeRepository
-import com.nuc.tracking.teacherend.service.admin.CollegeService
+import com.nuc.zens.po.admin.College
+import com.nuc.zens.repository.admin.CollegeRepository
+import com.nuc.zens.service.admin.CollegeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

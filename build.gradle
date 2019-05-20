@@ -24,7 +24,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.16'
     // druid
     implementation 'com.alibaba:druid:1.1.12'
     //jwt
@@ -32,7 +32,10 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '4.1.0'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.0'
     compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '4.1.0'
-    compile 'wu.seal:kotlin-reflect-tools-for-jvm:1.1.2'  
+    compile 'wu.seal:kotlin-reflect-tools-for-jvm:1.1.2'
+    // aop
+    implementation('org.springframework.boot:spring-boot-starter-aop')
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

@@ -1,7 +1,7 @@
-package com.nuc.tracking.teacherend.service.admin
+package com.nuc.zens.service.admin
 
-import com.nuc.tracking.teacherend.exception.ResultException
-import com.nuc.tracking.teacherend.po.admin.College
+import com.nuc.zens.exception.ResultException
+import com.nuc.zens.po.admin.College
 
 interface CollegeService {
     @Throws(ResultException::class)
