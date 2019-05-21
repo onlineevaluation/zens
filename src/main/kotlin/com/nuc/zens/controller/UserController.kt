@@ -80,10 +80,16 @@ class UserController {
         return ResultUtils.success()
     }
 
+    @DeleteMapping("/student/{studentId}")
+    fun deleteStudent(@PathVariable(name = "studentId") studentId: Long) {
+        println("id = $studentId")
 
-    @PutMapping("/teacher/role")
-    fun updateTeacherRole(@RequestBody teacherRoleParam: TeacherRoleParam) {
-        println("teacher Id is ${teacherRoleParam.roleIds}")
+    }
+
+    @GetMapping("/student/{studentId}")
+    fun getStudentProfile(@PathVariable(name = "studentId") studentId: Long): Result {
+        val student = userService.getStudentProfile(studentId)
+        return ResultUtils.success(data = student, message = "获取成功")
     }
 
 }

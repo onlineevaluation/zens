@@ -4,6 +4,7 @@ import com.nuc.zens.exception.ResultException
 import com.nuc.zens.po.Student
 import com.nuc.zens.po.Teacher
 import com.nuc.zens.vo.StudentInfo
+import com.nuc.zens.vo.StudentProfileInfo
 import com.nuc.zens.vo.TeacherInfo
 import com.nuc.zens.vo.UserProfileInfo
 
@@ -51,7 +52,7 @@ interface UserService {
      * 获取所有的教师
      * @return List<Teacher>
      */
-    fun findAllTeacher(page:Int): List<TeacherInfo>
+    fun findAllTeacher(page: Int): List<TeacherInfo>
 
     /**
      * 添加学生用户
@@ -65,4 +66,10 @@ interface UserService {
      * 更改教师权限
      */
     fun updateTeacherRole()
+
+    /**
+     * 获取学生详细信息
+     * @param studentId Long
+     */
+    fun getStudentProfile(studentId:Long):StudentProfileInfo
 }

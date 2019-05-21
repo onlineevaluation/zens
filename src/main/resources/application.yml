@@ -41,6 +41,9 @@ spring:
       ddl-auto: update
   main:
     allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      enabled: false
 
 
 server:

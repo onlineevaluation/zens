@@ -57,3 +57,32 @@ class TeacherInfo {
     lateinit var position: String
     var positionId: Long = 0L
 }
+
+/**
+ * 学生详细信息
+ * @property id Long
+ * @property email String?
+ * @property idcard String?
+ * @property name String
+ * @property phone String?
+ * @property studentNumber String
+ * @property qq String?
+ * @property classNumber String?
+ */
+class StudentProfileInfo {
+    var id: Long = 0L
+    var email: String? = null
+    var idcard: String? = null
+    lateinit var name: String
+    var phone: String? = null
+    /**
+     * 学号
+     */
+    lateinit var studentNumber: String
+
+    var qq: String? = null
+    /**
+     * 班级号
+     */
+    var classNumber: String? = null
+}

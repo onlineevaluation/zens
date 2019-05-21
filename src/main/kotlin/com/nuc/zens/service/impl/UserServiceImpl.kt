@@ -6,6 +6,7 @@ import com.nuc.zens.repository.*
 import com.nuc.zens.security.JwtTokenProvider
 import com.nuc.zens.service.UserService
 import com.nuc.zens.vo.StudentInfo
+import com.nuc.zens.vo.StudentProfileInfo
 import com.nuc.zens.vo.TeacherInfo
 import com.nuc.zens.vo.UserProfileInfo
 import org.slf4j.Logger
@@ -173,7 +174,6 @@ class UserServiceImpl : UserService, UserDetailsService {
         val studentPage = studentRepository.findAll(pageable)
         val totalPage = studentPage.totalPages
         val totalElement = studentPage.totalElements
-        println("执行完查询所有 ")
         val studentInfoList = studentPage.map {
 
             val studentInfo = StudentInfo()
@@ -182,7 +182,6 @@ class UserServiceImpl : UserService, UserDetailsService {
             studentInfo.`class` = `class`.name
             return@map studentInfo
         }.toList()
-        println("执行完所有的")
 
         return studentInfoList
 
@@ -250,4 +249,19 @@ class UserServiceImpl : UserService, UserDetailsService {
     override fun updateTeacherRole() {
 
     }
+
+
+    /**
+     * 获取学生详细信息
+     * @param studentId Long
+     */
+    override fun getStudentProfile(studentId: Long): StudentProfileInfo {
+        val student = studentRepository.findById(studentId).get()
+        val `class` = classRepository.findById(student.classId).get()
+        val studentProfileInfo = StudentProfileInfo()
+        BeanUtils.copyProperties(student, studentProfileInfo)
+        studentProfileInfo.classNumber = `class`.name
+        return studentProfileInfo
+    }
+
 }
