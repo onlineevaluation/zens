@@ -9,5 +9,13 @@ interface CollegeTargetService {
     fun save(collegeTarget: CollegeTarget)
 
     @Throws(ResultException::class)
+    fun saveAll(collegeTargetList: List<CollegeTarget>)
+
+    @Throws(ResultException::class)
     fun findOne(id:Long): CollegeTarget
+
+    @Throws(ResultException::class)
+    fun getList():  Map<Long, List<CollegeTarget>>
+
+
 }

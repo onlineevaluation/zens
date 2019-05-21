@@ -23,7 +23,8 @@ class CollegeController {
     @PostMapping("/insert")
     fun insertCollege(@RequestBody college: College): Result {
         println("college ${college}")
-        val msg = collegeService.save(college)
+        collegeService.save(college)
+        val msg = collegeService.findAll()
         return ResultUtils.success(200, "插入成功", msg)
     }
 
@@ -34,16 +35,16 @@ class CollegeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    fun deleteOne(@PathVariable id:Long):Result{
+    fun deleteOne(@PathVariable id: Long): Result {
         collegeService.deleteById(id)
-        val msg=collegeService.findAll()
-        return ResultUtils.success(200,"删除成功",msg)
+        val msg = collegeService.findAll()
+        return ResultUtils.success(200, "删除成功", msg)
     }
 
     @GetMapping("/findOne/{id}")
-    fun findOne(@PathVariable id:Long):Result{
-        val msg=collegeService.findOne(id)
-        return ResultUtils.success(200,"查找成功",msg)
+    fun findOne(@PathVariable id: Long): Result {
+        val msg = collegeService.findOne(id)
+        return ResultUtils.success(200, "查找成功", msg)
     }
 
 
