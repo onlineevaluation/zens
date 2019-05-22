@@ -1,13 +1,17 @@
 package com.nuc.zens.service.impl.point
 
 import com.nuc.zens.repository.point.RAbilityRepository
-import com.nuc.tracking.teacherend.service.point.RAbilityService
+import com.nuc.zens.service.point.RAbilityService
 import com.nuc.zens.po.entity.RAbility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class RAbilityServiceImpl:RAbilityService {
+class RAbilityServiceImpl: RAbilityService {
+    override fun getAll(id: Long): List<RAbility> {
+        return rAbilityRepository.findAll()
+    }
+
     override fun findOne(id: Long): RAbility {
         val rAbility = rAbilityRepository.findById(id).get()
         return rAbility
