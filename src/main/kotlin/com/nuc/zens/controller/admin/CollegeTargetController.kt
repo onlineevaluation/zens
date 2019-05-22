@@ -1,7 +1,9 @@
 package com.nuc.zens.controller.admin
 
+import com.nuc.zens.po.admin.CollegeResponse
 import com.nuc.zens.po.entity.CollegeTarget
 import com.nuc.zens.result.Result
+import com.nuc.zens.service.admin.CollegeService
 import com.nuc.zens.service.point.CollegeTargetService
 import com.nuc.zens.util.ResultUtils
 import org.slf4j.Logger
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/collegeTarget")
 class CollegeTargetController {
     @Autowired
-    private lateinit var collegeTargetService:CollegeTargetService
+    private lateinit var collegeTargetService: CollegeTargetService
+    @Autowired
+    private lateinit var collegeService: CollegeService
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/insert")
@@ -29,7 +33,15 @@ class CollegeTargetController {
 
     @GetMapping("/all")
     fun getList(): Result {
-        val msg = collegeTargetService.getList()
-        return ResultUtils.success(200, "获取列表", msg)
+        var res = ArrayList<CollegeResponse>()
+        val targetList = collegeTargetService.getList()
+        targetList.forEach { (key, value) ->
+            val collegeResponse = CollegeResponse()
+            collegeResponse.collegeId = key
+            collegeResponse.collegeTargetList = value
+            collegeResponse.collegeName=collegeService.findOne(key).name!!
+            res.add(collegeResponse)
+        }
+        return ResultUtils.success(200, "获取列表", res)
     }
 }

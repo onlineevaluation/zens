@@ -5,7 +5,6 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "uek_acdemic_ability")
-@JsonIgnoreProperties(value = ["id"])
 class RAbility {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
