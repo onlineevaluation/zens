@@ -1,6 +1,6 @@
 package com.nuc.zens.po.entity
 
-import com.nuc.zens.po.entity.Student
+import com.nuc.zens.po.Student
 
 /**
  * 返回给教师端的班级学生信息

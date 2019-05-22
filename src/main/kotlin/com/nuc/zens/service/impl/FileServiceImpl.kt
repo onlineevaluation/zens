@@ -1,18 +1,20 @@
 package com.nuc.zens.service.impl
 
+import com.nuc.zens.exception.ResultException
 import com.nuc.zens.po.Student
 import com.nuc.zens.po.User
+import com.nuc.zens.po.UserAndRole
 import com.nuc.zens.repository.*
 import com.nuc.zens.repository.point.CourseRepository
 import com.nuc.zens.repository.point.KnowledgeRepository
 import com.nuc.zens.service.FileService
-import org.apache.poi.ss.usermodel.CellType
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFRow
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileOutputStream
@@ -41,27 +43,49 @@ class FileServiceImpl : FileService {
     @Autowired
     private lateinit var chapterRepository: ChapterRepository
 
+    @Autowired
+    private lateinit var userAndRoleRepository: UserAndRoleRepository
+
+    private lateinit var workbook: Workbook
+
+    /**
+     * 上传学生信息
+     * @param file MultipartFile 上传学生信息
+     * @param type String
+     */
+    @Transactional
     override fun uploadExcelFile(file: MultipartFile, type: String) {
-        val workbook = WorkbookFactory.create(file.inputStream)
-        val sheet = workbook.getSheet("学生信息")
+        workbook = WorkbookFactory.create(file.inputStream)
+        if (type == "student") {
+            addStudentUser(workbook)
+        }
+
+
+    }
+
+    /**
+     * 进行学生添加功能
+     * @param workbook Workbook
+     */
+    private fun addStudentUser(workbook: Workbook) {
+        val sheet = workbook.getSheet("学生信息") ?: throw ResultException("文件为空", 500)
         val encoder = BCryptPasswordEncoder()
+        var continueCount = 0
         for (row in sheet) {
             if (row == null) {
                 continue
             }
             var cellString = ""
-            var stopFlag = 0
+            continueCount++
+            if (continueCount == 1) {
+                continue
+            }
+            if (isRowEmpty(row)) {
+                break
+            }
             for (cell in row) {
-
-                if (cell.cellType === CellType.BLANK) {
-                    stopFlag = 1
-                    break
-                }
                 cell.cellType = CellType.STRING
                 cellString += "$cell$"
-            }
-            if (stopFlag == 1) {
-                continue
             }
             val list = cellString.split('$')
             val student = Student()
@@ -75,9 +99,26 @@ class FileServiceImpl : FileService {
             val newUser = userRepository.save(user)
             student.userId = newUser.id
             studentRepository.save(student)
+            val userAndRole = UserAndRole()
+            userAndRole.userId = newUser.id
+            // roleId 3 学生
+            userAndRole.roleId = 3
+            userAndRoleRepository.saveAndFlush(userAndRole)
         }
-
     }
+
+    private fun isRowEmpty(row: Row): Boolean {
+        var c = row.firstCellNum
+        while (c < row.lastCellNum) {
+            val cell = row.getCell(c.toInt())
+            if (cell != null && cell.cellType != CellType.BLANK) {
+                return false
+            }
+            c++
+        }
+        return true
+    }
+
 
     /**
      * 创建 student 模板
@@ -252,6 +293,7 @@ class FileServiceImpl : FileService {
             cell.setCellValue(header[i])
         }
     }
-
-
 }
+
+
+

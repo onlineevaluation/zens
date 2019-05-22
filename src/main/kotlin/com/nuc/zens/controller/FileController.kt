@@ -25,12 +25,17 @@ class FileController {
     @Autowired
     private lateinit var fileService: FileService
 
-    @PostMapping("/excel/student")
-    fun uploadFile(@RequestParam file: MultipartFile): Result {
+    /**
+     * 上传学生信息
+     * @param file MultipartFile
+     * @return Result
+     */
+    @PostMapping("/excel/{type}")
+    fun uploadFile(@PathVariable(name = "type") type: String, @RequestParam("excel") file: MultipartFile): Result {
         if (file.isEmpty) {
             return ResultUtils.error(500, "文件上传失败")
         }
-        fileService.uploadExcelFile(file, type = "student")
+        fileService.uploadExcelFile(file, type)
         return ResultUtils.success()
     }
 
