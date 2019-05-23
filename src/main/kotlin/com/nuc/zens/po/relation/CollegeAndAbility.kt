@@ -8,12 +8,12 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "nuc_tracking_college_ability")
-@JsonIgnoreProperties(value = ["id"])
 class CollegeAndAbility {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
     var abilityId: Long = 0
     var collegeTargetId: Long = 0
+    var collegeId: Long = 0
     var percent: Float = 0f
 }
