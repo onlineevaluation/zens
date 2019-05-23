@@ -8,8 +8,14 @@ interface CollegeAndAbilityService {
     fun save(collegeAndAbility: CollegeAndAbility)
 
     @Throws(ResultException::class)
+    fun saveAll(collegeAndAbilityList: List<CollegeAndAbility>)
+
+    @Throws(ResultException::class)
+    fun getAll(): Map<Long,List<CollegeAndAbility>>?
+
+    @Throws(ResultException::class)
     fun deleteById(id: Long)
 
     @Throws(ResultException::class)
-    fun findOne(id:Long): CollegeAndAbility
+    fun findOne(id: Long): CollegeAndAbility
 }

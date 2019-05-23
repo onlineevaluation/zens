@@ -9,11 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class CollegeAndAbilityServiceImpl: CollegeAndAbilityService {
+class CollegeAndAbilityServiceImpl : CollegeAndAbilityService {
+    override fun getAll(): Map<Long,List<CollegeAndAbility>>? {
+        return collegeAndAbilityRepository.findAll().groupBy { it.collegeId }
+    }
+
+    override fun saveAll(collegeAndAbilityList: List<CollegeAndAbility>) {
+        collegeAndAbilityRepository.saveAll(collegeAndAbilityList)
+    }
+
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     private lateinit var collegeAndAbilityRepository: CollegeAndAbilityRepository
+
     override fun save(collegeAndAbility: CollegeAndAbility) {
         collegeAndAbilityRepository.save(collegeAndAbility)
     }
