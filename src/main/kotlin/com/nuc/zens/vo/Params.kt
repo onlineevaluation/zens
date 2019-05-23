@@ -42,6 +42,12 @@ data class StudentParam(val studentName: String, val studentNum: String, val cla
  * @property positionId Long
  * @constructor
  */
-data class TeacherParam(val teacherName: String, val teacherNum: String, val positionId: Long)
+data class TeacherParam(val teacherName: String, val teacherNum: String, val positionId: Long, val sex: Int)
 
-data class TeacherRoleParam(val teacherId:Long,val roleIds:Array<Int>)
+/**
+ *
+ * @property teacherId Long
+ * @property roleIds Array<Int>
+ * @constructor
+ */
+data class TeacherRoleParam(val teacherId: Long, val roleIds: Array<Int>)

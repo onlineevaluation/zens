@@ -52,6 +52,17 @@ class UserController {
     }
 
     /**
+     * 通过教师id获取教师信息
+     * @param teacherId  teacherId: Long
+     * @return Result
+     */
+    @GetMapping("/profile/teacher/{teacherId}")
+    fun teacherProfile(@PathVariable("teacherId") teacherId: Long): Result {
+        val teacherProfileInfo = userService.teacherProfile(teacherId)
+        return ResultUtils.success(data = teacherProfileInfo)
+    }
+
+    /**
      * 获取所有的学生
      * @return Result
      */

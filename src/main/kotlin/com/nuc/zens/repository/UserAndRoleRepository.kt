@@ -15,7 +15,7 @@ interface UserAndRoleRepository : JpaRepository<UserAndRole, Long> {
      * 通过用户id查找
      * @param userId 用户id
      */
-    fun findUserAndRoleByUserId(userId: Long): UserAndRole
+    fun findByUserId(userId: Long): List<UserAndRole>
 
     /**
      * 通过角色id
@@ -23,4 +23,6 @@ interface UserAndRoleRepository : JpaRepository<UserAndRole, Long> {
      * @return List<UserAndRole>
      */
     fun findByRoleId(roleId: Long): List<UserAndRole>
+
+    fun findUserAndRoleByUserId(userId: Long):UserAndRole
 }

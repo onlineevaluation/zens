@@ -56,6 +56,12 @@ class TeacherInfo {
     lateinit var teacherNumber: String
     lateinit var position: String
     var positionId: Long = 0L
+    var sex: String? = null
+    override fun toString(): String {
+        return "TeacherInfo(id=$id, name='$name', teacherNumber='$teacherNumber', position='$position', positionId=$positionId, sex=$sex)"
+    }
+
+
 }
 
 /**
@@ -85,4 +91,36 @@ class StudentProfileInfo {
      * 班级号
      */
     var classNumber: String? = null
+}
+
+/**
+ * 教师详细信息
+ * @property id Long
+ * @property name String
+ * @property jobNumber String
+ * @property sex String
+ * @property tel String?
+ */
+class TeacherProfileInfo {
+    var id: Long = 0
+    lateinit var name: String
+    lateinit var jobNumber: String
+    lateinit var sex: String
+    var tel: String? = null
+    lateinit var position: String
+}
+
+/**
+ * 教师权限管理
+ * @property id Long
+ * @property name String
+ * @property jobNumber String
+ * @property role String
+ */
+class TeacherRoleInfo {
+    var id: Long = 0
+    lateinit var name: String
+    lateinit var jobNumber: String
+    lateinit var role: String
+    lateinit var position:String
 }

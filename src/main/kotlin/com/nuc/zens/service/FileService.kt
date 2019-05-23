@@ -1,19 +1,37 @@
 package com.nuc.zens.service
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.io.FileOutputStream
 
 /**
  * @author 杨晓辉 4/27/2019 7:46 PM
  */
 @Service
 interface FileService {
-
+    /**
+     * 文件上传
+     * @param file MultipartFile
+     * @param type String 上传类型
+     */
     fun uploadExcelFile(file: MultipartFile, type: String)
+
+    /**
+     * 创建添加学生模板
+     * @return File
+     */
     fun createTemplateOfStudent(): File
+
+    /**
+     * 创建添加试题模板
+     * @param courseId Long
+     * @return File
+     */
     fun createTemplateOfTitle(courseId: Long): File
+
+    /**
+     * 创建添加章节模板
+     * @return File
+     */
     fun createTemplateOfChapter(): File
 }

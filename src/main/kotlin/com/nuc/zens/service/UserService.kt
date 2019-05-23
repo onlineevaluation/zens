@@ -3,10 +3,7 @@ package com.nuc.zens.service
 import com.nuc.zens.exception.ResultException
 import com.nuc.zens.po.Student
 import com.nuc.zens.po.Teacher
-import com.nuc.zens.vo.StudentInfo
-import com.nuc.zens.vo.StudentProfileInfo
-import com.nuc.zens.vo.TeacherInfo
-import com.nuc.zens.vo.UserProfileInfo
+import com.nuc.zens.vo.*
 
 /**
  * @author 杨晓辉 2019/4/26 15:55
@@ -37,10 +34,10 @@ interface UserService {
     fun studentProfile(studentId: Long): StudentInfo
 
     /**
-     * 通过教师 id 获取学生
+     * 通过教师 id 获取教师
      * @param teacherId Long
      */
-    fun teacherProfile(teacherId: Long)
+    fun teacherProfile(teacherId: Long):TeacherProfileInfo
 
     /**
      * 获取所有的学生

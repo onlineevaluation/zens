@@ -1,14 +1,13 @@
 package com.nuc.zens.service.impl
 
 import com.nuc.zens.exception.ResultException
-import com.nuc.zens.po.*
+import com.nuc.zens.po.Student
+import com.nuc.zens.po.User
+import com.nuc.zens.po.UserAndRole
 import com.nuc.zens.repository.*
 import com.nuc.zens.security.JwtTokenProvider
 import com.nuc.zens.service.UserService
-import com.nuc.zens.vo.StudentInfo
-import com.nuc.zens.vo.StudentProfileInfo
-import com.nuc.zens.vo.TeacherInfo
-import com.nuc.zens.vo.UserProfileInfo
+import com.nuc.zens.vo.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.BeanUtils
@@ -21,8 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import java.time.Duration
-import java.time.LocalTime
 import javax.transaction.Transactional
 
 /**
@@ -160,8 +157,24 @@ class UserServiceImpl : UserService, UserDetailsService {
         return studentInfo
     }
 
-    override fun teacherProfile(teacherId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    /**
+     * 获取教师信息
+     * @param teacherId Long
+     * @return TeacherProfileInfo
+     */
+    override fun teacherProfile(teacherId: Long): TeacherProfileInfo {
+        val teacher = teacherRepository.findById(teacherId).get()
+        val teacherProfileInfo = TeacherProfileInfo()
+        BeanUtils.copyProperties(teacher, teacherProfileInfo)
+        teacherProfileInfo.sex = if (teacher.sex == 0) {
+            "男"
+        } else {
+            "女"
+        }
+        // 获取职位
+        teacherProfileInfo.position = positionRepository.findById(teacher.positionId).get().name
+
+        return teacherProfileInfo
     }
 
 
@@ -196,10 +209,16 @@ class UserServiceImpl : UserService, UserDetailsService {
         val teacherList = teacherRepository.findAll()
         val teacherInfoList = teacherList.map {
             val teacherInfo = TeacherInfo()
+            teacherInfo.id = it.id
             teacherInfo.name = it.name
             val position = positionRepository.getOne(it.positionId)
             teacherInfo.position = position.name
             teacherInfo.positionId = position.id
+            teacherInfo.sex = if (it.sex == 0) {
+                "男"
+            } else {
+                "女"
+            }
             teacherInfo.teacherNumber = it.jobNumber
             return@map teacherInfo
         }
