@@ -12,6 +12,7 @@ class RAbility {
     var collegeId: Long = 0
     var name: String? = null
     var summary: String? = null
-    var percent:Float=0f
+    var percent: Float = 0f
+    var isDisable = false
 
 }

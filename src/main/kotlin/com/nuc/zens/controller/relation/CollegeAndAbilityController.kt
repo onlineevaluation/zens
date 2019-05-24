@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.*
 class CollegeAndAbilityController {
     @Autowired
     private lateinit var collegeAndAbilityService: CollegeAndAbilityService
+    @Autowired
     private lateinit var collegeService: CollegeService
+    @Autowired
     private lateinit var collegeTargetService: CollegeTargetService
+    @Autowired
     private lateinit var abilityService: RAbilityService
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -39,16 +42,29 @@ class CollegeAndAbilityController {
     @GetMapping("/getAll")
     fun getAll(): Result {
 
-        //todo(待完成)
         val msg = ArrayList<CollegeAbililityResponse>()
-        var collegeAbilityList=collegeAndAbilityService.getAll()
-        if (collegeAbilityList!==null){
-            collegeAbilityList.map {
-                var caResponse=CAResponse()
-
+        var collegeAbilityList = collegeAndAbilityService.getAll()
+        if (collegeAbilityList !== null) {
+            collegeAbilityList.map { (key, value) ->
+                var collegeAbililityResponse = CollegeAbililityResponse()
+                collegeAbililityResponse.collegeId = key
+                collegeAbililityResponse.collegeName = collegeService.findOne(key).name!!
+                var tempList = ArrayList<CAResponse>()
+                value.map { item ->
+                    var caResponse = CAResponse()
+                    caResponse.abilityId = item.abilityId
+                    caResponse.abilityName = abilityService.findOne(item.abilityId).name!!
+                    caResponse.collegeTargetId = item.collegeTargetId
+                    caResponse.collegeTargetName = collegeTargetService.findOne(item.collegeTargetId).name
+                    caResponse.percent = item.percent
+                    caResponse.CAId = item.id
+                    tempList.add(caResponse)
+                }
+                collegeAbililityResponse.collegeAbilityList=tempList
+                msg.add(collegeAbililityResponse)
             }
         }
 
-        return ResultUtils.success(200, "插入成功", msg)
+        return ResultUtils.success(200, "查找成功", msg)
     }
 }

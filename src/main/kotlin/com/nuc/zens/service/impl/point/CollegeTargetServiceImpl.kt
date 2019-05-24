@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class CollegeTargetServiceImpl : CollegeTargetService {
+    override fun findByCollegeId(collegeId: Long): List<CollegeTarget> {
+        return collegeTargetRepository.findByCollegeId(collegeId)
+    }
+
     override fun saveAll(collegeTargetList: List<CollegeTarget>) {
         collegeTargetRepository.saveAll(collegeTargetList)
     }

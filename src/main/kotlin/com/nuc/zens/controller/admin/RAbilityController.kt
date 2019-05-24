@@ -22,4 +22,10 @@ class RAbilityController {
         return ResultUtils.success(200, "获取毕业指标列表", msg)
     }
 
+    @GetMapping("/findByCollegeId")
+    fun findByCollegeId(collegeId:Long):Result{
+        val msg = rAbilityService.findByCollegeId(collegeId)
+        return ResultUtils.success(200, "获取毕业指标列表", msg)
+    }
+
 }
