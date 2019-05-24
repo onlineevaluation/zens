@@ -18,7 +18,7 @@ class Knowledge {
     var isImportant: Boolean = false
     var video: String? = null
     var courseId: Long = 0
-    var clickNum: Long = 0
+    var clickNum: Long? = 0
     var chapterId: Long = 0
     var percent:Float = 0f
 

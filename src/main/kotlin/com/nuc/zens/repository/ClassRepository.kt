@@ -10,5 +10,9 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ClassRepository : JpaRepository<Class, Long> {
 
-
+    /**
+     * 通过名字查询班级
+     * @param name String
+     */
+    fun findByNameLike(name: String):List<Class>
 }
