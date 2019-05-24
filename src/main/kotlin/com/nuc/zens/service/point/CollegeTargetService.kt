@@ -17,5 +17,7 @@ interface CollegeTargetService {
     @Throws(ResultException::class)
     fun getList():  Map<Long, List<CollegeTarget>>
 
+    @Throws(ResultException::class)
+    fun findByCollegeId(collegeId:Long): List<CollegeTarget>
 
 }

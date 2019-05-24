@@ -33,7 +33,7 @@ class CollegeTargetController {
 
     @GetMapping("/all")
     fun getList(): Result {
-        var res = ArrayList<CollegeResponse>()
+        val res = ArrayList<CollegeResponse>()
         val targetList = collegeTargetService.getList()
         targetList.forEach { (key, value) ->
             val collegeResponse = CollegeResponse()
@@ -43,5 +43,11 @@ class CollegeTargetController {
             res.add(collegeResponse)
         }
         return ResultUtils.success(200, "获取列表", res)
+    }
+
+    @GetMapping("/getByCollegeId")
+    fun getByCollegeId(collegeId:Long):Result{
+        val msg =collegeTargetService.findByCollegeId(collegeId)
+        return ResultUtils.success(200, "获取专业指标列表", msg)
     }
 }
