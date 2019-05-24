@@ -24,5 +24,17 @@ interface UserAndRoleRepository : JpaRepository<UserAndRole, Long> {
      */
     fun findByRoleId(roleId: Long): List<UserAndRole>
 
+    /**
+     * 获得角色
+     * @param userId Long
+     * @return UserAndRole
+     */
     fun findUserAndRoleByUserId(userId: Long):UserAndRole
+
+    /**
+     * 通过 user id 进行删除
+     * @param userId Long
+     */
+    fun deleteByUserId(userId: Long)
+
 }

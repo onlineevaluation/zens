@@ -39,6 +39,7 @@ class TeacherController {
      */
     @PutMapping("/teacher/{teacherId}")
     fun updateTeacher(@RequestBody teacherParam: TeacherParam, @PathVariable("teacherId") teacherId: Long): Result {
+        println("teacherParam = $teacherParam")
         teacherService.updateTeacher(
             teacherId,
             teacherParam.teacherName,
