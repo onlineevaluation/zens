@@ -19,4 +19,9 @@ class UserAndRole {
     @Column(name = "role_id")
     var roleId: Long = 0L
 
+    override fun toString(): String {
+        return "UserAndRole(id=$id, userId=$userId, roleId=$roleId)"
+    }
+
+
 }

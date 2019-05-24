@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class ClazzServiceImpl : ClazzService {
+
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+
+    @Autowired
+    private lateinit var clazzRepository: ClazzRepository
+
     override fun save(clazz: Clazz) {
         clazzRepository.save(clazz)
     }
@@ -31,10 +37,6 @@ class ClazzServiceImpl : ClazzService {
     }
 
 
-    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
-
-    @Autowired
-    private lateinit var clazzRepository: ClazzRepository
 
 
 }

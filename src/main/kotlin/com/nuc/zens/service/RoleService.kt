@@ -12,4 +12,11 @@ interface RoleService {
      * @return List<Role>
      */
     fun getAllRole():List<Role>
+
+    /**
+     * 更新权限
+     * @param teacherId Long 教师id
+     * @param roles Array<Int> 角色id
+     */
+    fun updateRole(teacherId:Long,roles:Array<Int>)
 }

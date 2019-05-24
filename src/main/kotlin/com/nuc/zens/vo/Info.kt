@@ -122,5 +122,34 @@ class TeacherRoleInfo {
     lateinit var name: String
     lateinit var jobNumber: String
     lateinit var role: String
-    lateinit var position:String
+    lateinit var position: String
+}
+
+/**
+ * 试题信息
+ * @property id Long
+ * @property title String
+ * @property answer String
+ */
+class TitleInfo {
+    var id: Long = 0L
+    lateinit var title: String
+    lateinit var answer: String
+    var knowledge: String? = null
+    var difficulty: Double = 0.0
+    var analysis: String? = null
+    var sectionA: String? = null
+    var sectionB: String? = null
+    var sectionC: String? = null
+    var sectionD: String? = null
+    var course: String? = null
+    lateinit var category: String
+}
+
+
+class ClassInfo {
+    var id: Long = 0L
+    lateinit var name: String
+
+    var classmateCount: Long = 0
 }
