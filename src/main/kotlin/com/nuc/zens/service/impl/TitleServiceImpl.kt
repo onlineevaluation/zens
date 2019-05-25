@@ -1,10 +1,12 @@
 package com.nuc.zens.service.impl
 
+import com.nuc.zens.po.Title
 import com.nuc.zens.repository.TitleRepository
 import com.nuc.zens.repository.point.CourseRepository
 import com.nuc.zens.repository.point.KnowledgeRepository
 import com.nuc.zens.service.TitleService
 import com.nuc.zens.vo.TitleInfo
+import com.nuc.zens.vo.TitleParam
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -62,5 +64,17 @@ class TitleServiceImpl : TitleService {
             return@map titleInfo
         }
 
+    }
+
+
+    /**
+     * 添加完成的试题
+     * @param titleParam TitleParam
+     */
+    override fun addTitle(titleParam: TitleParam) {
+        val title = Title()
+        BeanUtils.copyProperties(titleParam, title)
+        println("title = ${title}")
+        titleRepository.saveAndFlush(title)
     }
 }

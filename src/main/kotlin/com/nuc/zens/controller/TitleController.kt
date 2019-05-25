@@ -3,10 +3,9 @@ package com.nuc.zens.controller
 import com.nuc.zens.result.Result
 import com.nuc.zens.service.TitleService
 import com.nuc.zens.util.ResultUtils
+import com.nuc.zens.vo.TitleParam
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * @author 杨晓辉 5/2/2019 6:05 PM
@@ -25,6 +24,12 @@ class TitleController {
     fun getAllTitle(): Result {
         val list = titleService.getAllTitle()
         return ResultUtils.success(data = list)
+    }
+
+    @PostMapping("/title")
+    fun addTitle(@RequestBody titleParam: TitleParam): Result {
+
+        return ResultUtils.success()
     }
 
 }

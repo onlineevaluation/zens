@@ -13,7 +13,6 @@ class Course {
     var name: String = ""
     var introduce: String = ""
     var percent: Float = 0f
-
     var coverImage: String? = null
     var level: String? = null
     var direction: String? = null

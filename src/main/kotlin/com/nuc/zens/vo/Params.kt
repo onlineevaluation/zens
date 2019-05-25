@@ -53,3 +53,36 @@ data class TeacherParam(val teacherName: String, val teacherNum: String, val pos
  * @constructor
  */
 data class TeacherRoleParam(val teacherId: Long, val roleIds: Array<Int>)
+
+/**
+ * 获取所有的试题
+ * @property title String
+ * @property answer String
+ * @property analysis String
+ * @property difficulty Long
+ * @property courseId Long
+ * @property knowledgeId Long
+ * @property isOrder Long
+ * @property type String
+ * @property a String
+ * @property b String
+ * @property c String
+ * @property d String
+ * @constructor
+ */
+data class TitleParam(
+    val title: String, val answer: String,
+
+    val analysis: String,
+    val difficulty: Long,
+    val courseId: Long,
+    val knowledgeId: Long,
+    val isOrder: Long,
+    val category: String,
+    val sectionA: String,
+    val sectionB: String,
+    val sectionC: String,
+    val sectionD: String
+
+
+)

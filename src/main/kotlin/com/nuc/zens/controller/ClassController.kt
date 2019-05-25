@@ -32,4 +32,10 @@ class ClassController {
         return ResultUtils.success(message = "添加成功")
     }
 
+    @GetMapping("/search/{name}")
+    fun searchByName(@PathVariable name: String) :Result{
+        val list = classService.searchClassName(name)
+        return ResultUtils.success(data = list)
+    }
+
 }
