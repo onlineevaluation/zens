@@ -4,6 +4,7 @@ import com.nuc.zens.exception.ResultException
 import com.nuc.zens.po.Student
 import com.nuc.zens.po.User
 import com.nuc.zens.po.UserAndRole
+import com.nuc.zens.po.entity.Course
 import com.nuc.zens.repository.*
 import com.nuc.zens.repository.point.CourseRepository
 import com.nuc.zens.repository.point.KnowledgeRepository
@@ -58,8 +59,10 @@ class FileServiceImpl : FileService {
         workbook = WorkbookFactory.create(file.inputStream)
         if (type == "student") {
             addStudentUser(workbook)
+        } else if (type.startsWith("course")) {
+            val collegeId = type.replace("course", "").toLong()
+            addCourse(workbook, collegeId)
         }
-
 
     }
 
@@ -119,6 +122,38 @@ class FileServiceImpl : FileService {
         return true
     }
 
+    /**
+     * 添加课程
+     */
+    private fun addCourse(workbook: Workbook, collegeId: Long) {
+        val sheet = workbook.getSheet("课程信息") ?: throw ResultException("文件为空", 500)
+        val encoder = BCryptPasswordEncoder()
+        var continueCount = 0
+        for (row in sheet) {
+            if (row == null) {
+                continue
+            }
+            var cellString = ""
+            continueCount++
+            if (continueCount == 1) {
+                continue
+            }
+            if (isRowEmpty(row)) {
+                break
+            }
+            for (cell in row) {
+                cell.cellType = CellType.STRING
+                cellString += "$cell$"
+            }
+            val list = cellString.split('$')
+            val course = Course()
+            course.name = list[0]
+            course.direction = list[1]
+            course.percent = list[2].toFloat()
+            course.collegeId = collegeId
+            courseRepository.saveAndFlush(course)
+        }
+    }
 
     /**
      * 创建 student 模板
@@ -169,17 +204,17 @@ class FileServiceImpl : FileService {
         val knowledgeRow = knowledgeSheet.createRow(0)
         val chapterRow = chapterSheet.createRow(0)
         val titleHeader = mutableListOf(
-            "题目",
-            "题型(1 选择题，2填空题，3简单题，编程题和算法题请从网页添加，暂不支持批量导入)",
-            "难度(0~1)",
-            "答案",
-            "分析",
-            "选项A",
-            "选项B",
-            "选项C",
-            "选项D",
-            "答案是否有序",
-            "知识点ID"
+                "题目",
+                "题型(1 选择题，2填空题，3简单题，编程题和算法题请从网页添加，暂不支持批量导入)",
+                "难度(0~1)",
+                "答案",
+                "分析",
+                "选项A",
+                "选项B",
+                "选项C",
+                "选项D",
+                "答案是否有序",
+                "知识点ID"
         )
         val knowledgeHeader = mutableListOf("知识点id", "知识点", "是否重点 (1 是/ 0 否)", "是否难点(1 是/ 0 否)", "章节id")
         val chapterHeader = mutableListOf("章节id", "章节名称")
@@ -250,10 +285,10 @@ class FileServiceImpl : FileService {
         val chapterRow = chapterSheet.createRow(0)
         val courseRow = courseSheet.createRow(0)
         val chapterHeader = mutableListOf(
-            "章节名称",
-            "是否重点 (1 是/ 0 否)",
-            "是否难点(1 是/ 0 否)",
-            "课程id"
+                "章节名称",
+                "是否重点 (1 是/ 0 否)",
+                "是否难点(1 是/ 0 否)",
+                "课程id"
         )
         val courseHeader = mutableListOf("课程id", "课程名称")
         addTableHeader(chapterRow, chapterHeader)
@@ -280,6 +315,20 @@ class FileServiceImpl : FileService {
         return File("d:/course.xlsx")
 
 
+    }
+
+    override fun createTemplateOfCourse(): File {
+        val workbook = XSSFWorkbook()
+        val courseSheet = workbook.createSheet("课程信息")
+        val courseRow = courseSheet.createRow(0)
+        val courseHeader = mutableListOf<String>("课程名", "是否为公共课", "百分比")
+        // 设置学生sheet表头
+        addTableHeader(courseRow, courseHeader)
+
+        val os = FileOutputStream("d:/课程.xlsx")
+        workbook.write(os)
+        val file = File("d:/课程.xlsx")
+        return file
     }
 
     /**

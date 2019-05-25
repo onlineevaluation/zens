@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service
  */
 @Service
 class CourseServiceImpl : CourseService {
+    override fun findAllGroupByCollege(): Map<Long,List<Course>> {
+        return courseRepository.findAll().groupBy { it.collegeId }
+    }
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 

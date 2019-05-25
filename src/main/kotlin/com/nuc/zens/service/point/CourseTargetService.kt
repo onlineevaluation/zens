@@ -8,7 +8,13 @@ interface CourseTargetService {
     fun save(courseTarget: CourseTarget)
 
     @Throws(ResultException::class)
+    fun saveAll(courseTargetList: List<CourseTarget>)
+
+    @Throws(ResultException::class)
     fun findOne(id: Long): CourseTarget
+
+    @Throws(ResultException::class)
+    fun findAll(): Map<Long,List<CourseTarget>>
 
     @Throws(ResultException::class)
     fun findByCourseId(id: Long): CourseTarget
