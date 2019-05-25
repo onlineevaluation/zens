@@ -7,21 +7,20 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "uek_acdemic_course")
-@JsonIgnoreProperties(value = ["id"])
 class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
-    var num: String=""
-    var name: String=""
-    var introduce: String=""
+    var num: String = ""
+    var name: String = ""
+    var introduce: String = ""
 
-    lateinit var coverImage: String
-    lateinit var level:String
-    lateinit var direction:String
-    lateinit var score:String
-    lateinit var classHour:String
-    var requirement:String?=null
+    var coverImage: String? = null
+    var level: String? = null
+    var direction: String? = null
+    var score: String? = null
+    var classHour: String? = null
+    var requirement: String? = null
 
 
 }

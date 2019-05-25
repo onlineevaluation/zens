@@ -39,7 +39,12 @@ class ClassServiceImpl : ClassService {
     }
 
 
-    override fun searchClassName(name: String):List<ClassInfo> {
+    /**
+     * 查询班级信息
+     * @param name String
+     * @return List<ClassInfo>
+     */
+    override fun searchClassName(name: String): List<ClassInfo> {
         val nameLike = "%$name%"
         val classList = classRepository.findByNameLike(nameLike)
         return getClassInfo(classList)
