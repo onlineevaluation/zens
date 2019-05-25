@@ -34,4 +34,10 @@ interface FileService {
      * @return File
      */
     fun createTemplateOfChapter(): File
+
+    /**
+     * 创建添加课程模板
+     * @return File
+     */
+    fun createTemplateOfCourse(): File
 }

@@ -21,6 +21,9 @@ interface CourseService {
     fun findAll(): List<Course>
 
     @Throws(ResultException::class)
+    fun findAllGroupByCollege(): Map<Long,List<Course>>
+
+    @Throws(ResultException::class)
     fun findByLevel(level: String): List<Course>
     /**
      * @author 杨晓辉 5/2/2019 6:13 PM

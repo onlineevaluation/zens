@@ -9,6 +9,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class CourseTargetServiceImpl: CourseTargetService {
+    override fun saveAll(courseTargetList: List<CourseTarget>) {
+        courseTargetRepository.saveAll(courseTargetList)
+    }
+
+    override fun findAll(): Map<Long, List<CourseTarget>> {
+        return courseTargetRepository.findAll().groupBy { it.courseId }
+    }
+
     override fun findByCourseId(id: Long): CourseTarget {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

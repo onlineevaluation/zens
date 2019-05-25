@@ -68,11 +68,17 @@ class FileController {
         headers.add("Pragma", "no-cache")
         headers.add("Expires", "0")
         return ResponseEntity
-            .ok()
-            .headers(headers)
-            .contentLength(excelFile.contentLength())
-            .contentType(MediaType.parseMediaType("application/octet-stream"))
-            .body(InputStreamResource(excelFile.inputStream))
+                .ok()
+                .headers(headers)
+                .contentLength(excelFile.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(InputStreamResource(excelFile.inputStream))
+    }
+
+    @GetMapping("/excel/course")
+    fun downloadCourseTemplates(): ResponseEntity<InputStreamResource> {
+        val file = fileService.createTemplateOfCourse()
+        return downloadExcelStream(file, "course")
     }
 
 }
