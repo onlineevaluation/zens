@@ -6,12 +6,17 @@ import com.nuc.zens.po.Title
 import com.nuc.zens.po.User
 import com.nuc.zens.po.UserAndRole
 import com.nuc.zens.repository.*
+import com.nuc.zens.repository.point.CollegeTargetRepository
 import com.nuc.zens.repository.point.CourseRepository
 import com.nuc.zens.repository.point.KnowledgeRepository
 import com.nuc.zens.service.FileService
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFRow
+import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.xmlbeans.SchemaType
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCol
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.impl.CTColsImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -41,6 +46,9 @@ class FileServiceImpl : FileService {
 
     @Autowired
     private lateinit var courseRepository: CourseRepository
+
+    @Autowired
+    private lateinit var collegeTargetRepository: CollegeTargetRepository
 
     @Autowired
     private lateinit var chapterRepository: ChapterRepository
@@ -174,6 +182,42 @@ class FileServiceImpl : FileService {
         val file = File("d:/课程.xlsx")
         return file
     }
+
+
+    /**
+     * 添加课程与专业目标关系
+     */
+    private fun addCourseAndCollegeTargetRelation(workbook: Workbook, courseId: Long) {
+        val sheet = workbook.getSheet("课程与专业目标关系信息") ?: throw ResultException("文件为空", 500)
+        val encoder = BCryptPasswordEncoder()
+        var continueCount = 0
+        for (row in sheet) {
+            if (row == null) {
+                continue
+            }
+            var cellString = ""
+            continueCount++
+            if (continueCount == 1) {
+                continue
+            }
+            if (isRowEmpty(row)) {
+                break
+            }
+            for (cell in row) {
+                cell.cellType = CellType.STRING
+                cellString += "$cell$"
+            }
+            val list = cellString.split('$')
+            val course = Course()
+            course.name = list[0]
+            course.direction = list[1]
+            course.percent = list[2].toFloat()
+//            course.collegeId = collegeId
+            courseRepository.saveAndFlush(course)
+        }
+    }
+
+
     /**
      * 创建 student 模板
      * @return FileOutputStream
@@ -336,8 +380,49 @@ class FileServiceImpl : FileService {
 
     }
 
+
+    override fun createTemplateOfCourse(): File {
+        val workbook = XSSFWorkbook()
+        val courseSheet = workbook.createSheet("课程信息")
+        val courseRow = courseSheet.createRow(0)
+        val courseHeader = mutableListOf<String>("课程名", "是否为公共课", "百分比")
+        // 设置学生sheet表头
+        addTableHeader(courseRow, courseHeader)
+
+        val os = FileOutputStream("d:/课程.xlsx")
+        workbook.write(os)
+        val file = File("d:/课程.xlsx")
+        return file
+    }
+
+    override fun createTemplateOfCourseAndCollegeTargetRelation(collegeId: Long): File {
+        val workbook = XSSFWorkbook()
+        val relationSheet = workbook.createSheet("课程与专业目标关系信息")
+        // 设置sheet横表头
+        val relationRow = relationSheet.createRow(0)
+        val courseList = courseRepository.findByCollegeId(collegeId)
+        val relationHeader = courseList.map { item ->
+            return@map item.name
+        }
+        addRowTableHeader(relationRow, relationHeader)
+
+        // 设置sheet列表头
+        val collegeTargetList = collegeTargetRepository.findByCollegeId(collegeId)
+        val relationColumn = collegeTargetList.map { item ->
+            return@map item.name
+        }
+        addColumnTableHeader(relationSheet, relationColumn)
+
+        // 生成文件
+        val os = FileOutputStream("d:/课程与专业目标关系.xlsx")
+        workbook.write(os)
+        val file = File("d:/课程与专业目标关系.xlsx")
+        return file
+    }
+
+
     /**
-     * 给 excel 添加表头
+     * 给 excel 添加横向表头 顶格起
      * @param row XSSFRow 所属行
      * @param header List<String> 表头内容
      */
@@ -345,6 +430,31 @@ class FileServiceImpl : FileService {
         for (i in 0 until header.size) {
             val cell = row.createCell(i)
             cell.setCellValue(header[i])
+        }
+    }
+
+    /**
+     * 给 excel 添加横向表头 顶格起
+     * @param row XSSFRow 所属行
+     * @param header List<String> 表头内容
+     */
+    private fun addRowTableHeader(row: XSSFRow, header: List<String>) {
+        for (i in 1 until header.size) {
+            val cell = row.createCell(i)
+            cell.setCellValue(header[i])
+        }
+    }
+
+    /**
+     * 给 excel 添加表头 列表头，空出第一格
+     * @param row XSSFRow 所属行
+     * @param header List<String> 表头内容
+     */
+    private fun addColumnTableHeader(sheet: XSSFSheet, header: List<String>) {
+        for (i in 1 until header.size) {
+            val row = sheet.createRow(i)
+            val cell = row.createCell(0)
+            cell.setCellValue(header[i - 1])
         }
     }
 }

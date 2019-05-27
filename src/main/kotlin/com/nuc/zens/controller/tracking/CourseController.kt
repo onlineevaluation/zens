@@ -61,6 +61,15 @@ class CourseController {
         return ResultUtils.success(200, "查找成功", msg)
     }
 
+    /**
+     * 根据专业号查找
+     */
+    @GetMapping("/findAllByCollegeId")
+    fun findAllByCollegeId(collegeId: Long): Result {
+        val msg = courseService.findByCollegeId(collegeId)
+        return ResultUtils.success(200, "根据专业号查找成功", msg)
+    }
+
     @GetMapping("/findByLevel/{level}")
     fun findByLevel(@PathVariable level: String): Result {
         val msg = courseService.findByLevel(level)

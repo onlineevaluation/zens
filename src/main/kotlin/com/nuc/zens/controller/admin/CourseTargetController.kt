@@ -4,6 +4,7 @@ import com.nuc.zens.po.admin.CourseTargetRes
 import com.nuc.zens.po.entity.CourseTarget
 import com.nuc.zens.result.Result
 import com.nuc.zens.service.admin.CollegeService
+import com.nuc.zens.service.point.CourseService
 import com.nuc.zens.service.point.CourseTargetService
 import com.nuc.zens.util.ResultUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,16 +22,16 @@ class CourseTargetController {
     @Autowired
     private lateinit var collegeService: CollegeService
     @Autowired
-    private lateinit var courseService: CollegeService
+    private lateinit var courseService: CourseService
 
     @PostMapping("/insert")
-    fun insertCollege(@RequestBody courseTargetList: List<CourseTarget>): Result {
+    fun insertCourseTarget(@RequestBody courseTargetList: List<CourseTarget>): Result {
         courseTargetService.saveAll(courseTargetList)
         val res = ArrayList<CourseTargetRes>()
         val targetList = courseTargetService.findAll()
         targetList.forEach { (key, value) ->
             val courseTargetRes = CourseTargetRes()
-            courseTargetRes.courseName=courseService.findOne(key).name!!
+            courseTargetRes.courseName=courseService.findOne(key).name
             courseTargetRes.courseTargetList=value
             res.add(courseTargetRes)
         }
@@ -43,7 +44,7 @@ class CourseTargetController {
         val targetList = courseTargetService.findAll()
         targetList.forEach { (key, value) ->
             val courseTargetRes = CourseTargetRes()
-            courseTargetRes.courseName=courseService.findOne(key).name!!
+            courseTargetRes.courseName= courseService.findOne(key).name
             courseTargetRes.courseTargetList=value
             res.add(courseTargetRes)
         }

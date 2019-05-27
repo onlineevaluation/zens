@@ -27,8 +27,16 @@ class CollegeTargetController {
     @PostMapping("/insert")
     fun insertCollege(@RequestBody collegeTargetList: List<CollegeTarget>): Result {
         collegeTargetService.saveAll(collegeTargetList)
-        val msg = collegeTargetService.getList()
-        return ResultUtils.success(200, "插入成功", msg)
+        val res = ArrayList<CollegeResponse>()
+        val targetList = collegeTargetService.getList()
+        targetList.forEach { (key, value) ->
+            val collegeResponse = CollegeResponse()
+            collegeResponse.collegeId = key
+            collegeResponse.collegeTargetList = value
+            collegeResponse.collegeName=collegeService.findOne(key).name!!
+            res.add(collegeResponse)
+        }
+        return ResultUtils.success(200, "插入成功", res)
     }
 
     @GetMapping("/all")

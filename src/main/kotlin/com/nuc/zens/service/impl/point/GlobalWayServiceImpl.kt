@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class GlobalWayServiceImpl: GlobalWayService {
+    override fun saveAll(globalWayList: List<GlobalWay>) {
+        globalWayRepository.saveAll(globalWayList)
+    }
+
+    override fun findAll(): Map<Long, List<GlobalWay>> {
+        return globalWayRepository.findAll().groupBy { it.courseId }
+    }
+
     override fun findOne(id: Long): GlobalWay {
         val globalWay = globalWayRepository.findById(id).get()
         return globalWay
