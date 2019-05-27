@@ -14,14 +14,18 @@ import org.springframework.stereotype.Service
  */
 @Service
 class CourseServiceImpl : CourseService {
+    @Autowired
+    private lateinit var courseRepository: CourseRepository
+
+    override fun findByCollegeId(collegeId: Long): List<Course> {
+        return courseRepository.findByCollegeId(collegeId)
+    }
+
     override fun findAllGroupByCollege(): Map<Long,List<Course>> {
         return courseRepository.findAll().groupBy { it.collegeId }
     }
 
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
-
-    @Autowired
-    private lateinit var courseRepository: CourseRepository
 
     override fun findByLevel(level: String): List<Course> {
         val courseList: List<Course> = courseRepository.findCourseByLevel(level)!!

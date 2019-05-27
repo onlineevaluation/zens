@@ -8,6 +8,17 @@ import org.springframework.stereotype.Service
 
 @Service
 class DailyWayServiceImpl: DailyWayService {
+    @Autowired
+    private lateinit var dailyWayRepository: DailyWayRepository
+
+    override fun save(dailyWayList: List<DailyWay>) {
+        dailyWayRepository.saveAll(dailyWayList)
+    }
+
+    override fun findAll(): Map<Long, List<DailyWay>> {
+        return dailyWayRepository.findAll().groupBy { it.courseId }
+    }
+
     override fun findDailyWayByCourseIdAndType(id: Long,type:String): DailyWay {
         val dailyWay = dailyWayRepository.findDailyWayByCourseIdAndType(id,type)
         return dailyWay
@@ -18,9 +29,4 @@ class DailyWayServiceImpl: DailyWayService {
         return dailyWay
     }
 
-    @Autowired
-    private lateinit var dailyWayRepository: DailyWayRepository
-    override fun save(dailyWay: DailyWay) {
-        dailyWayRepository.save(dailyWay)
-    }
 }

@@ -8,8 +8,14 @@ interface KnowledgeService {
     fun save(knowledge: Knowledge)
 
     @Throws(ResultException::class)
+    fun saveAll(knowledgeList: List<Knowledge>)
+
+    @Throws(ResultException::class)
     fun findOne(id: Long): Knowledge
 
     @Throws(ResultException::class)
     fun findAllByCourseId(courseId: Long): List<Knowledge>
+
+    @Throws(ResultException::class)
+    fun findAll(): Map<Long, List<Knowledge>>
 }
