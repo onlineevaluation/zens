@@ -25,6 +25,9 @@ interface CourseService {
 
     @Throws(ResultException::class)
     fun findByLevel(level: String): List<Course>
+
+    @Throws(ResultException::class)
+    fun findByCollegeId(collegeId: Long): List<Course>
     /**
      * @author 杨晓辉 5/2/2019 6:13 PM
      */

@@ -40,4 +40,10 @@ interface FileService {
      * @return File
      */
     fun createTemplateOfCourse(): File
+
+    /**
+     * 创建添加课程与专业目标关系模板
+     * @return File
+     */
+    fun createTemplateOfCourseAndCollegeTargetRelation(collegeId: Long): File
 }
