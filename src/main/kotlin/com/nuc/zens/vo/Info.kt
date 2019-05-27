@@ -143,6 +143,7 @@ class TitleInfo {
     var sectionC: String? = null
     var sectionD: String? = null
     var course: String? = null
+    var orderd: Long? = 1
     lateinit var category: String
 }
 

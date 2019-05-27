@@ -1,7 +1,5 @@
 package com.nuc.zens.vo
 
-import java.util.*
-
 
 /**
  * @author 杨晓辉 2018-12-29 16:06
@@ -71,18 +69,17 @@ data class TeacherRoleParam(val teacherId: Long, val roleIds: Array<Int>)
  * @constructor
  */
 data class TitleParam(
-    val title: String, val answer: String,
-
-    val analysis: String,
+    val title: String,
+    val answer: String,
+    val analysis: String?,
     val difficulty: Long,
     val courseId: Long,
     val knowledgeId: Long,
     val isOrder: Long,
     val category: String,
-    val sectionA: String,
-    val sectionB: String,
-    val sectionC: String,
-    val sectionD: String
-
+    val sectionA: String?,
+    val sectionB: String?,
+    val sectionC: String?,
+    val sectionD: String?
 
 )
