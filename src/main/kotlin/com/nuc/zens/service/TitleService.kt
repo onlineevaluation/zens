@@ -11,4 +11,8 @@ interface TitleService {
     fun getAllTitle(): List<TitleInfo>
 
     fun addTitle(titleParam: TitleParam)
+
+    fun updateTitle(titleParam: TitleParam)
+
+    fun findTitleByCategory(category: String): List<TitleInfo>
 }

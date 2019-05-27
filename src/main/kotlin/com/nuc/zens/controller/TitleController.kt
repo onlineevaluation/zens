@@ -32,4 +32,14 @@ class TitleController {
         return ResultUtils.success()
     }
 
+    @PutMapping("/title")
+    fun updateTitle(@RequestBody titleParam: TitleParam): Result {
+        return ResultUtils.success()
+    }
+
+    @GetMapping("/title/{category}")
+    fun getCategory(@PathVariable category: String): Result {
+        val list = titleService.findTitleByCategory(category)
+        return ResultUtils.success(data = list)
+    }
 }

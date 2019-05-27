@@ -61,6 +61,11 @@ class TitleServiceImpl : TitleService {
             val knowledge = knowledgeRepository.findById(it.knowledgeId).get()
             titleInfo.knowledge = knowledge.name
             titleInfo.course = courseRepository.findById(it.courseId).get().name
+            if (it.orderd) {
+                titleInfo.orderd = 1
+            } else {
+                titleInfo.orderd = 0
+            }
             return@map titleInfo
         }
 
@@ -76,5 +81,20 @@ class TitleServiceImpl : TitleService {
         BeanUtils.copyProperties(titleParam, title)
         println("title = ${title}")
         titleRepository.saveAndFlush(title)
+    }
+
+    override fun updateTitle(titleParam: TitleParam) {
+
+
+    }
+
+    override fun findTitleByCategory(category: String): List<TitleInfo> {
+        val titleList = titleRepository.findByCategory(category)
+        return titleList.filter { it.category == "5" }.map {
+            val titleInfo = TitleInfo()
+            BeanUtils.copyProperties(it, titleInfo)
+            return@map titleInfo
+        }
+
     }
 }
