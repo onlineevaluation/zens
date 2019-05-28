@@ -12,4 +12,8 @@ interface CourseTarAndKnowledgeService {
 
     @Throws(ResultException::class)
     fun findOne(id:Long): CourseTarAndKnowledge
+
+
+    @Throws(ResultException::class)
+    fun findAll(): Map<Long,List<CourseTarAndKnowledge>>
 }

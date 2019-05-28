@@ -87,4 +87,10 @@ class FileController {
         return downloadExcelStream(file, "courseAndCollege")
     }
 
+    @GetMapping("/excel/courseTarAndKnowledge")
+    fun downloadCourseTargetAndKnowledgeTemplates(courseId:Long): ResponseEntity<InputStreamResource> {
+        val file = fileService.createTemplateOfCourseTargetAndKnowledgeRelation(courseId)
+        return downloadExcelStream(file, "courseTarAndKnowledge")
+    }
+
 }

@@ -12,4 +12,7 @@ interface CourseAndCollegeService {
 
     @Throws(ResultException::class)
     fun findOne(id:Long): CourseAndCollege
+
+    @Throws(ResultException::class)
+    fun findAll(): Map<Long,List<CourseAndCollege>>?
 }

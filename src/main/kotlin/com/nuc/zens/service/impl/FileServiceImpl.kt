@@ -5,10 +5,16 @@ import com.nuc.zens.po.Student
 import com.nuc.zens.po.Title
 import com.nuc.zens.po.User
 import com.nuc.zens.po.UserAndRole
+import com.nuc.zens.po.entity.Course
+import com.nuc.zens.po.relation.CourseAndCollege
+import com.nuc.zens.po.relation.CourseTarAndKnowledge
 import com.nuc.zens.repository.*
 import com.nuc.zens.repository.point.CollegeTargetRepository
 import com.nuc.zens.repository.point.CourseRepository
+import com.nuc.zens.repository.point.CourseTargetRepository
 import com.nuc.zens.repository.point.KnowledgeRepository
+import com.nuc.zens.repository.relation.CourseAndCollegeRepository
+import com.nuc.zens.repository.relation.CourseTarAndKnowledgeRepository
 import com.nuc.zens.service.FileService
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFRow
@@ -51,10 +57,19 @@ class FileServiceImpl : FileService {
     private lateinit var collegeTargetRepository: CollegeTargetRepository
 
     @Autowired
+    private lateinit var courseTargetRepository: CourseTargetRepository
+
+    @Autowired
     private lateinit var chapterRepository: ChapterRepository
 
     @Autowired
     private lateinit var userAndRoleRepository: UserAndRoleRepository
+
+    @Autowired
+    private lateinit var courseAndCollegeRepository: CourseAndCollegeRepository
+
+    @Autowired
+    private lateinit var courseTarAndKnowledgeRepository: CourseTarAndKnowledgeRepository
 
     private lateinit var workbook: Workbook
 
@@ -70,9 +85,16 @@ class FileServiceImpl : FileService {
             addStudentUser(workbook)
         } else if (type == "title") {
             addTitle(workbook)
+        } else if (type.startsWith("course")) {
+            val collegeId = type.replace("course", "").toLong()
+            addCourse(workbook, collegeId)
+        } else if (type.startsWith("relationOfCourseAndCollege")) {
+            val collegeId = type.replace("relationOfCourseAndCollege", "").toLong()
+            addCourseAndCollegeTargetRelation(workbook, collegeId)
+        } else if (type.startsWith("knowledgeAndCourseTar")) {
+            val courseId = type.replace("knowledgeAndCourseTar", "").toLong()
+            addCourseTargetAndKnowledgeRelation(workbook, courseId)
         }
-
-
     }
 
     private fun addTitle(workbook: Workbook) {
@@ -113,6 +135,7 @@ class FileServiceImpl : FileService {
             println("list = $title")
         }
     }
+
     /**
      * 进行学生添加功能
      * @param workbook Workbook
@@ -169,26 +192,11 @@ class FileServiceImpl : FileService {
         return true
     }
 
-    override fun createTemplateOfCourse(): File {
-        val workbook = XSSFWorkbook()
-        val courseSheet = workbook.createSheet("课程信息")
-        val courseRow = courseSheet.createRow(0)
-        val courseHeader = mutableListOf<String>("课程名", "是否为公共课", "百分比")
-        // 设置学生sheet表头
-        addTableHeader(courseRow, courseHeader)
-
-        val os = FileOutputStream("d:/课程.xlsx")
-        workbook.write(os)
-        val file = File("d:/课程.xlsx")
-        return file
-    }
-
-
     /**
-     * 添加课程与专业目标关系
+     * 添加课程
      */
-    private fun addCourseAndCollegeTargetRelation(workbook: Workbook, courseId: Long) {
-        val sheet = workbook.getSheet("课程与专业目标关系信息") ?: throw ResultException("文件为空", 500)
+    private fun addCourse(workbook: Workbook, collegeId: Long) {
+        val sheet = workbook.getSheet("课程信息") ?: throw ResultException("文件为空", 500)
         val encoder = BCryptPasswordEncoder()
         var continueCount = 0
         for (row in sheet) {
@@ -212,8 +220,120 @@ class FileServiceImpl : FileService {
             course.name = list[0]
             course.direction = list[1]
             course.percent = list[2].toFloat()
-//            course.collegeId = collegeId
+            course.collegeId = collegeId
             courseRepository.saveAndFlush(course)
+        }
+    }
+
+
+    /**
+     * 添加课程与专业目标关系
+     */
+    private fun addCourseAndCollegeTargetRelation(workbook: Workbook, collegeId: Long) {
+        val sheet = workbook.getSheet("课程与专业目标关系信息") ?: throw ResultException("文件为空", 500)
+        val encoder = BCryptPasswordEncoder()
+        var continueCount = 0
+        var courseList = ArrayList<String>()
+        for (row in sheet) {
+            if (row == null) {
+                continue
+            }
+            var cellString = ""
+            continueCount++
+            if (continueCount == 1) {
+                for (cell in row) {
+                    cell.cellType = CellType.STRING
+                    var temp = cell.stringCellValue.split("/")
+                    courseList.add(temp[1])
+                }
+                continue
+            }
+            if (isRowEmpty(row)) {
+                break
+            }
+            var count = 0
+            var collegeTargetId = 0L
+            for (cell in row) {
+                if (count == 0) {
+                    cell.cellType = CellType.STRING
+                    println("The cell value is " + cell.stringCellValue)
+                    var temp = cell.stringCellValue.split("/")
+                    collegeTargetId = temp[1].toLong()
+                    count++
+                    continue
+                }
+                cell.cellType = CellType.STRING
+                cellString += "$cell$"
+                count++
+            }
+            val list = cellString.split('$')
+            var index = 0
+            courseList.forEach { item ->
+                val courseAndCollege = CourseAndCollege()
+                courseAndCollege.courseId = item.toLong()
+                courseAndCollege.collegeTargetId = collegeTargetId
+                courseAndCollege.percent = list[index].toFloat()
+                courseAndCollege.collegeId = collegeId
+                courseAndCollegeRepository.saveAndFlush(courseAndCollege)
+                index++
+            }
+        }
+    }
+
+    /**
+     * 添加课程目标与知识点关系
+     */
+    private fun addCourseTargetAndKnowledgeRelation(workbook: Workbook, courseId: Long) {
+        val sheet = workbook.getSheet("课程目标与知识点关系信息") ?: throw ResultException("文件为空", 500)
+        val encoder = BCryptPasswordEncoder()
+        var continueCount = 0
+        var knowledgeList = ArrayList<String>()
+        for (row in sheet) {
+            if (row == null) {
+                continue
+            }
+            var cellString = ""
+            continueCount++
+            // 从表头中取出知识点的id信息
+            if (continueCount == 1) {
+                for (cell in row) {
+                    cell.cellType = CellType.STRING
+                    var temp = cell.stringCellValue.split("/")
+                    knowledgeList.add(temp[1])
+                }
+                continue
+            }
+            if (isRowEmpty(row)) {
+                break
+            }
+            var count = 0
+            // 迭代每一列的第一格，从中取出课程目标id
+            var courseTargetId = 0L
+            for (cell in row) {
+                if (count == 0) {
+                    cell.cellType = CellType.STRING
+                    println("The cell value is " + cell.stringCellValue)
+                    var temp = cell.stringCellValue.split("/")
+                    courseTargetId = temp[1].toLong()
+                    count++
+                    continue
+                }
+                cell.cellType = CellType.STRING
+                cellString += "$cell$"
+                count++
+            }
+            val list = cellString.split('$')
+            var index = 0
+            // knowledgeList中存放的就是知识点id
+            knowledgeList.forEach { item ->
+                var courseAndKnowledge = CourseTarAndKnowledge()
+                courseAndKnowledge.courseId = courseId
+                courseAndKnowledge.courseTargetId = courseTargetId
+                courseAndKnowledge.knowledgeId = item.toLong()
+                courseAndKnowledge.percent = list[index].toFloat()
+                courseTarAndKnowledgeRepository.saveAndFlush(courseAndKnowledge)
+                index++
+            }
         }
     }
 
@@ -267,17 +387,17 @@ class FileServiceImpl : FileService {
         val knowledgeRow = knowledgeSheet.createRow(0)
         val chapterRow = chapterSheet.createRow(0)
         val titleHeader = mutableListOf(
-            "题目",
-            "题型(1 选择题，2填空题，3简单题，编程题和算法题请从网页添加，暂不支持批量导入)",
-            "难度(0~1)",
-            "答案",
-            "分析",
-            "选项A",
-            "选项B",
-            "选项C",
-            "选项D",
-            "答案是否有序",
-            "知识点ID"
+                "题目",
+                "题型(1 选择题，2填空题，3简单题，编程题和算法题请从网页添加，暂不支持批量导入)",
+                "难度(0~1)",
+                "答案",
+                "分析",
+                "选项A",
+                "选项B",
+                "选项C",
+                "选项D",
+                "答案是否有序",
+                "知识点ID"
         )
         val knowledgeHeader = mutableListOf("知识点id", "知识点", "是否重点 (1 是/ 0 否)", "是否难点(1 是/ 0 否)", "章节id")
         val chapterHeader = mutableListOf("章节id", "章节名称")
@@ -340,7 +460,6 @@ class FileServiceImpl : FileService {
         return file
     }
 
-
     override fun createTemplateOfChapter(): File {
         val workbook = XSSFWorkbook()
         val chapterSheet = workbook.createSheet("章节信息")
@@ -348,10 +467,10 @@ class FileServiceImpl : FileService {
         val chapterRow = chapterSheet.createRow(0)
         val courseRow = courseSheet.createRow(0)
         val chapterHeader = mutableListOf(
-            "章节名称",
-            "是否重点 (1 是/ 0 否)",
-            "是否难点(1 是/ 0 否)",
-            "课程id"
+                "章节名称",
+                "是否重点 (1 是/ 0 否)",
+                "是否难点(1 是/ 0 否)",
+                "课程id"
         )
         val courseHeader = mutableListOf("课程id", "课程名称")
         addTableHeader(chapterRow, chapterHeader)
@@ -380,7 +499,6 @@ class FileServiceImpl : FileService {
 
     }
 
-
     override fun createTemplateOfCourse(): File {
         val workbook = XSSFWorkbook()
         val courseSheet = workbook.createSheet("课程信息")
@@ -402,17 +520,45 @@ class FileServiceImpl : FileService {
         val relationRow = relationSheet.createRow(0)
         val courseList = courseRepository.findByCollegeId(collegeId)
         val relationHeader = courseList.map { item ->
-            return@map item.name
+            return@map item.name + '/' + item.id
         }
         addRowTableHeader(relationRow, relationHeader)
 
         // 设置sheet列表头
         val collegeTargetList = collegeTargetRepository.findByCollegeId(collegeId)
         val relationColumn = collegeTargetList.map { item ->
-            return@map item.name
+            return@map item.name + '/' + item.id
         }
         addColumnTableHeader(relationSheet, relationColumn)
 
+        // 生成文件
+        val os = FileOutputStream("d:/课程与专业目标关系.xlsx")
+        workbook.write(os)
+        val file = File("d:/课程与专业目标关系.xlsx")
+        return file
+    }
+
+    override fun createTemplateOfCourseTargetAndKnowledgeRelation(courseId: Long): File {
+        val workbook = XSSFWorkbook()
+        val relationSheet = workbook.createSheet("课程目标与知识点关系信息")
+        // 设置sheet横表头
+        val relationRow = relationSheet.createRow(0)
+        val knowledgeList = knowledgeRepository.findByCourseId(courseId)
+        val relationHeader = knowledgeList.map { item ->
+            return@map item.name + '/' + item.id
+        }
+        addRowTableHeader(relationRow, relationHeader)
+
+
+        // 设置sheet列表头
+
+        val courseTargetList = courseTargetRepository.findByCourseId(courseId)
+        if (courseTargetList != null) {
+            val relationColumn = courseTargetList.map { item ->
+                return@map item.name + '/' + item.id
+            }
+            addColumnTableHeader(relationSheet, relationColumn)
+        }
         // 生成文件
         val os = FileOutputStream("d:/课程与专业目标关系.xlsx")
         workbook.write(os)
@@ -434,14 +580,14 @@ class FileServiceImpl : FileService {
     }
 
     /**
-     * 给 excel 添加横向表头 顶格起
+     * 给 excel 添加横向表头
      * @param row XSSFRow 所属行
      * @param header List<String> 表头内容
      */
     private fun addRowTableHeader(row: XSSFRow, header: List<String>) {
-        for (i in 1 until header.size) {
+        for (i in 1 until header.size + 1) {
             val cell = row.createCell(i)
-            cell.setCellValue(header[i])
+            cell.setCellValue(header[i-1])
         }
     }
 
@@ -451,7 +597,7 @@ class FileServiceImpl : FileService {
      * @param header List<String> 表头内容
      */
     private fun addColumnTableHeader(sheet: XSSFSheet, header: List<String>) {
-        for (i in 1 until header.size) {
+        for (i in 1 until header.size + 1) {
             val row = sheet.createRow(i)
             val cell = row.createCell(0)
             cell.setCellValue(header[i - 1])

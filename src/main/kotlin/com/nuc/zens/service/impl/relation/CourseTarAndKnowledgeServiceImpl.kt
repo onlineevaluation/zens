@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class CourseTarAndKnowledgeServiceImpl: CourseTarAndKnowledgeService {
+    override fun findAll(): Map<Long, List<CourseTarAndKnowledge>> {
+        return courseTarAndKnowledgeRepository.findAll().groupBy { it.courseId }
+    }
+
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
